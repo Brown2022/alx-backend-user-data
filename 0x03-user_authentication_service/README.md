@@ -65,7 +65,7 @@ users.reset_token: VARCHAR(250)
 bob@dylan:~$ 
 ```
 <h3>1. create user</h3>
-In this task, you will complete the DB class provided below to implement the add_user method.
+In this task, you will complete the DB class provided below to implement the `add_user method`.
 ```
 """DB module
 """
@@ -98,9 +98,10 @@ class DB:
             self.__session = DBSession()
         return self.__session
 ```
-Note that DB._session is a private property and hence should NEVER be used from outside the DB class.
+Note that `DB._session` is a private property and hence should NEVER be used from outside the DB class.
 
-Implement the `add_user` method, which has two required string arguments: email and hashed_password, and returns a User object. The method should save the user to the database. No validations are required at this stage.
+Implement the `add_user` method, which has two required string arguments: email and `hashed_password`, and returns a User object. The method should save the user to the database. No validations are required at this stage.
+
 ```
 bob@dylan:~$ cat main.py
 #!/sr/bin/env python3
@@ -125,7 +126,7 @@ bob@dylan:~$ python3 main.py
 bob@dylan:~$
 ```
 <h3>2. Find user</h3>
-In this task you will implement the DB.find_user_by method. This method takes in arbitrary keyword arguments and returns the first row found in the users table as filtered by the method’s input arguments. No validation of input arguments required at this point.
+In this task you will implement the `DB.find_user_by` method. This method takes in arbitrary keyword arguments and returns the first row found in the users table as filtered by the method’s input arguments. No validation of input arguments required at this point.
 
 Make sure that SQLAlchemy’s NoResultFound and InvalidRequestError are raised when no results are found, or when wrong query arguments are passed, respectively.
 
