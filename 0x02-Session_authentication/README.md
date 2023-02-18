@@ -129,12 +129,15 @@ bob@dylan:~$
 
 Create a class SessionAuth that inherits from Auth. For the moment this class will be empty. It’s the first step for creating a new authentication mechanism:
 
-validate if everything inherits correctly without any overloading
-validate the “switch” by using environment variables
-Update api/v1/app.py for using SessionAuth instance for the variable auth depending of the value of the environment variable AUTH_TYPE, If AUTH_TYPE is equal to session_auth:
+- validate if everything inherits correctly without any overloading
 
-import SessionAuth from api.v1.auth.session_auth
-create an instance of SessionAuth and assign it to the variable auth
+- validate the “switch” by using environment variables
+
+Update `api/v1/app.py` for using `SessionAuth` instance for the variable `auth` depending of the value of the environment variable `AUTH_TYPE`, If `AUTH_TYPE` is equal to `session_auth`:
+
+- import `SessionAuth` from `api.v1.auth.session_auth`
+
+- create an instance of `SessionAuth` and assign it to the variable `auth`
 Otherwise, keep the previous mechanism.
 
 In the first terminal:
@@ -179,12 +182,12 @@ Update SessionAuth class:
 
 	- Otherwise:
 
-	- Generate a Session ID using `uuid` module and `uuid4()` like id in `Base`
-Use this Session ID as key of the dictionary user_id_by_session_id - the value for this key must be user_id
-Return the Session ID
-The same user_id can have multiple Session ID - indeed, the user_id is the value in the dictionary user_id_by_session_id
+		- Generate a Session ID using `uuid` module and `uuid4()` like id in `Base`
+		- Use this Session ID as key of the dictionary `user_id_by_session_id - the value for this key must be `user_id`
+		- Return the Session ID
+- The same `user_id` can have multiple Session ID - indeed, the `user_id` is the value in the dictionary `user_id_by_session_id`
 Now you an “in-memory” Session ID storing. You will be able to retrieve an User id based on a Session ID.
-
+```
 bob@dylan:~$ cat  main_1.py 
 #!/usr/bin/env python3
 """ Main 1
@@ -224,20 +227,22 @@ abcde => 61997a1b-3f8a-4b0f-87f6-19d5cafee63f: {'61997a1b-3f8a-4b0f-87f6-19d5caf
 fghij => 69e45c25-ec89-4563-86ab-bc192dcc3b4f: {'61997a1b-3f8a-4b0f-87f6-19d5cafee63f': 'abcde', '69e45c25-ec89-4563-86ab-bc192dcc3b4f': 'fghij'}
 abcde => 02079cb4-6847-48aa-924e-0514d82a43f4: {'61997a1b-3f8a-4b0f-87f6-19d5cafee63f': 'abcde', '02079cb4-6847-48aa-924e-0514d82a43f4': 'abcde', '69e45c25-ec89-4563-86ab-bc192dcc3b4f': 'fghij'}
 bob@dylan:~$
+```
+<h3>3. User ID for Session ID</h3>
 
-3. User ID for Session ID
-mandatory
-Score: 0.0% (Checks completed: 0.0%)
-Update SessionAuth class:
+Update `SessionAuth` class:
 
-Create an instance method def user_id_for_session_id(self, session_id: str = None) -> str: that returns a User ID based on a Session ID:
+Create an instance method def `user_id_for_session_id(self, session_id: str = None) -> str`: that returns a `User` ID based on a Session ID:
 
-Return None if session_id is None
-Return None if session_id is not a string
-Return the value (the User ID) for the key session_id in the dictionary user_id_by_session_id.
-You must use .get() built-in for accessing in a dictionary a value based on key
-Now you have 2 methods (create_session and user_id_for_session_id) for storing and retrieving a link between a User ID and a Session ID.
+- Return `None` if `session_id` is `None`
 
+- Return `None` if `session_id` is not a string
+
+- Return the value (the User ID) for the key `session_id` in the dictionary `user_id_by_session_id`.
+
+- You must use `.get()` built-in for accessing in a dictionary a value based on key
+Now you have 2 methods (`create_session` and `user_id_for_session_id`) for storing and retrieving a link between a User ID and a Session ID.
+```
 bob@dylan:~$ cat main_2.py 
 #!/usr/bin/env python3
 """ Main 2
@@ -305,18 +310,19 @@ abcde => 5d2930ba-f6d6-4a23-83d2-4f0abc8b8eee: {'a159ee3f-214e-4e91-9546-ca3ce87
 5d2930ba-f6d6-4a23-83d2-4f0abc8b8eee => abcde
 8647f981-f503-4638-af23-7bb4a9e4b53f => abcde
 bob@dylan:~$
-     
-4. Session cookie
-mandatory
-Score: 0.0% (Checks completed: 0.0%)
-Update api/v1/auth/auth.py by adding the method def session_cookie(self, request=None): that returns a cookie value from a request:
+```     
+<h3>4. Session cookie</h3>
+Update `api/v1/auth/auth.py` by adding the method `def session_cookie(self, request=None)`: that returns a cookie value from a request:
 
-Return None if request is None
-Return the value of the cookie named _my_session_id from request - the name of the cookie must be defined by the environment variable SESSION_NAME
-You must use .get() built-in for accessing the cookie in the request cookies dictionary
-You must use the environment variable SESSION_NAME to define the name of the cookie used for the Session ID
+- Return `None` if `request` is `None`
+
+- Return the value of the cookie named `_my_session_id` from `request` - the name of the cookie must be defined by the environment variable `SESSION_NAME`
+
+- You must use `.get()` built-in for accessing the cookie in the request cookies dictionary
+
+- You must use the environment variable `SESSION_NAME` to define the name of the cookie used for the Session ID
 In the first terminal:
-
+```
 bob@dylan:~$ cat main_3.py
 #!/usr/bin/env python3
 """ Cookie server
@@ -339,9 +345,9 @@ if __name__ == "__main__":
 
 bob@dylan:~$ API_HOST=0.0.0.0 API_PORT=5000 AUTH_TYPE=session_auth SESSION_NAME=_my_session_id ./main_3.py 
  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
-....
+```
 In a second terminal:
-
+```
 bob@dylan:~$ curl "http://0.0.0.0:5000"
 Cookie value: None
 bob@dylan:~$
@@ -354,11 +360,9 @@ bob@dylan:~$
 bob@dylan:~$ curl "http://0.0.0.0:5000" --cookie "_my_session_id_fake"
 Cookie value: None
 bob@dylan:~$
-     
-5. Before request
-mandatory
-Score: 0.0% (Checks completed: 0.0%)
-Update the @app.before_request method in api/v1/app.py:
+```     
+<h3>5. Before request</h3>
+Update the `@app.before_request method in api/v1/app.py:
 
 Add the URL path /api/v1/auth_session/login/ in the list of excluded paths of the method require_auth - this route doesn’t exist yet but it should be accessible outside authentication
 If auth.authorization_header(request) and auth.session_cookie(request) return None, abort(401)
